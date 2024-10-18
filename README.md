@@ -17,6 +17,9 @@ I got the steps for generating your own mTLS root certificates from the linkerd 
 
 ---
 
+After running the ```terraform apply``` command, you should have this created in your cluster
+![](img/namespaces.png)
+
 
 ## Configure Prometheus for Linkerd Metrics
 
@@ -41,6 +44,7 @@ To monitor Linkerd metrics, you need to set up an external **Prometheus** instan
 You can check if Prometheus is scraping the Linkerd jobs by visiting `http://localhost:9090/targets`.
 
 ---
+![](img/prometheus.png)
 
 ## Grafana Configuration
 
@@ -55,6 +59,7 @@ To visualize the metrics, you need to configure **Grafana**  to use Prometheus a
 
 2. Modify the `values.yaml` file to point to your Prometheus instance , in particular:
    -  ```datasources.datasources.yaml.datasources[0].url ``` should point to your Prometheus service
+   -  auth and log settings under grafana.ini
     
    
  If you are accessing Grafana directly at http://localhost:3000, then the root_url in the `values.yaml` should not contain /grafana/. It should simply be /.
@@ -74,6 +79,30 @@ If you are using a reverse proxy (like NGINX) and accessing Grafana on a subpath
       root_url: '%(protocol)s://%(domain)s:/grafana/'
   ```
 
+---
+## Install a demo app
+ I installed a demo application called Emojivoto. Emojivoto is a simple standalone Kubernetes application that uses a mix of gRPC and HTTP calls to allow the user to vote on their favorite emojis.
+Install Emojivoto into the emojivoto namespace by running:
+```
+curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/emojivoto.yml \
+  | kubectl apply -f -
+```
+ ![](img/demo-app.png)
+
+ To see  the app Forward web-svc locally to port 8080 by running:
+ ```
+kubectl -n emojivoto port-forward svc/web-svc 8080:80
+```
+![](img/app.png)
+
+After deploying the application you will have  to "mesh" it , that is , to add Linkerd’s data plane proxies to it. We do that by running:
+```
+kubectl get -n emojivoto deploy -o yaml \
+  | linkerd inject - \
+  | kubectl apply -f -
+```
+![](img/linkerd-inject-poc.png)
+
 ## Accessing Grafana
 
 After installation, you can access Grafana locally:
@@ -89,10 +118,15 @@ After installation, you can access Grafana locally:
         ```bash
         kubectl get secret --namespace grafana grafana -o jsonpath="{.data.admin-password}" | base64 --decode
         ```
+   We can see the list of dashboards that have been created 
+    ![](img/dashboards.png)
+    Now let us take a look at some of this dashboards
+    ![](img/linkerd-service-dashboard.png)
+    ![](img/k8scluster_monitor.png)
 
----
+   The metrics displayed in the dashboards above align with what are often referred to as Golden Signals in monitoring and observability. The Golden Signals are a set of key metrics recommended for monitoring microservices, especially in distributed systems. They help to understand the performance and health of services.
 
 # References
 - [Network Monitoring with the Linkerd Service Mesh](https://buoyant.io/blog/network-monitoring-with-the-linkerd-service-mesh)
 - [Bringing your own Prometheus](https://linkerd.io/2.12/tasks/external-prometheus/)
--  [Installing Linkerd with Helm](https://linkerd.io/2-edge/tasks/install-helm/#)
+- [Installing Linkerd with Helm](https://linkerd.io/2-edge/tasks/install-helm/#)

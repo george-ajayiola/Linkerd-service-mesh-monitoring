@@ -18,7 +18,7 @@ I got the steps for generating your own mTLS root certificates from the linkerd 
 ---
 
 After running the ```terraform apply``` command, you should have this created in your cluster
-![](img/namespaces.png)
+![](img/namespace.png)
 
 
 ## Configure Prometheus for Linkerd Metrics

@@ -53,17 +53,10 @@ To visualize the metrics, you need to configure **Grafana**  to use Prometheus a
     curl -O https://raw.githubusercontent.com/linkerd/linkerd2/main/grafana/values.yaml
     ```
 
-2. Modify the `values.yaml` file to point to your Prometheus instance:
-    ```yaml
-    datasources:
-      datasources.yaml:
-        datasources:
-          - name: Prometheus
-            type: prometheus
-            url: http://prometheus-server.monitoring.svc.cluster.local:80
-            access: proxy
-            isDefault: true
-    ```
+2. Modify the `values.yaml` file to point to your Prometheus instance , in particular:
+   -  ```datasources.datasources.yaml.datasources[0].url ``` should point to your Prometheus service
+    
+   
  If you are accessing Grafana directly at http://localhost:3000, then the root_url in the `values.yaml` should not contain /grafana/. It should simply be /.
 
 Correct root_url Setting

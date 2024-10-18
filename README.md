@@ -1,6 +1,13 @@
 # Linkerd and Prometheus Setup Guide
 
-This repository provides a step-by-step guide to installing and configuring **Prometheus** and **Grafana** for monitoring **Linkerd** metrics (linkerd proxy & control plane) in a Kubernetes environment.It’s important to note that you should never use the Prometheus that Linkerd Viz installs in production: it uses volatile storage for its metrics, so every time its Pod restarts, you’ll lose all your historical data. Instead, install your own Prometheus and use that.
+This repository documents the process I took for configuring **Prometheus** and **Grafana** for monitoring **Linkerd** metrics (linkerd proxy & control plane) in a Kubernetes environment.It’s important to note that you should never use the Prometheus that Linkerd Viz installs in production: it uses volatile storage for its metrics, so every time its Pod restarts, you’ll lose all your historical data. Instead, install your own Prometheus and use that. Linkerd can be installed via Helm rather than with the linkerd install command. This is recommended for production, since it allows for repeatability. I will be using Infrastructure as Code with Terraform to automate the setup.
+
+
+## Prerequisite: 
+generate mTLS certificates
+To do automatic mutual TLS, Linkerd requires trust anchor certificate and an issuer certificate and key pair. When you’re using linkerd install, these are generated  for you. However, for Helm, you will need to generate these yourself.
+
+I got the steps for generating your own mTLS root certificates from the linkerd [documentation](https://linkerd.io/2-edge/tasks/generate-certificates/#trust-anchor-certificate).
 
 ## Table of Contents
 
@@ -10,14 +17,10 @@ This repository provides a step-by-step guide to installing and configuring **Pr
 
 ---
 
-## Prometheus Installation
-
-To monitor Linkerd metrics, you need to set up an external **Prometheus** instance. This will scrape the control plane and proxy metrics in a format consumable by both users and Linkerd components like the web dashboard.
-
 
 ## Configure Prometheus for Linkerd Metrics
 
-To scrape **Linkerd** metrics, you'll need to modify the Prometheus configuration.
+To monitor Linkerd metrics, you need to set up an external **Prometheus** instance. This will scrape the control plane and proxy metrics in a format consumable by both users and Linkerd components like the web dashboard. To scrape **Linkerd** metrics, you'll need to modify the Prometheus configuration.
 
 ### Step 1: Modify the Prometheus ConfigMap
 
@@ -99,3 +102,4 @@ After installation, you can access Grafana locally:
 # References
 - [Network Monitoring with the Linkerd Service Mesh](https://buoyant.io/blog/network-monitoring-with-the-linkerd-service-mesh)
 - [Bringing your own Prometheus](https://linkerd.io/2.12/tasks/external-prometheus/)
+-  [Installing Linkerd with Helm](https://linkerd.io/2-edge/tasks/install-helm/#)

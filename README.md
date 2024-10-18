@@ -4,9 +4,8 @@ This repository provides a step-by-step guide to installing and configuring **Pr
 
 ## Table of Contents
 
-- [Prometheus Installation](#prometheus-installation)
 - [Configure Prometheus for Linkerd Metrics](#configure-prometheus-for-linkerd-metrics)
-- [Grafana Installation](#grafana-installation)
+- [Grafana Configuration](#grafana-configuration)
 - [Accessing Grafana](#accessing-grafana)
 
 ---
@@ -15,97 +14,43 @@ This repository provides a step-by-step guide to installing and configuring **Pr
 
 To monitor Linkerd metrics, you need to set up an external **Prometheus** instance. This will scrape the control plane and proxy metrics in a format consumable by both users and Linkerd components like the web dashboard.
 
-### Step 1: Install Prometheus in Your Kubernetes Cluster
-
-If Prometheus isn't already installed, you can install it using **Helm**.
-
-1. Add the Prometheus Helm repository:
-    ```bash
-    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-    helm repo update
-    ```
-
-2. Install Prometheus with Helm:
-    ```bash
-    helm install prometheus prometheus-community/prometheus --namespace monitoring --create-namespace
-    ```
-
-3. Check if Prometheus is running:
-    ```bash
-    kubectl get pods -n monitoring
-    ```
-
-4. Access the Prometheus dashboard:
-    ```bash
-    kubectl --namespace monitoring port-forward svc/prometheus-server 9090:80
-    ```
-
-    You can now access Prometheus at `http://localhost:9090`.
-
----
 
 ## Configure Prometheus for Linkerd Metrics
 
 To scrape **Linkerd** metrics, you'll need to modify the Prometheus configuration.
 
-### Step 2.1: Modify the Prometheus ConfigMap
+### Step 1: Modify the Prometheus ConfigMap
 
 1. Export the current configuration:
     ```bash
     kubectl get configmap prometheus-server -o yaml > prometheus-config.yaml
     ```
 
-2. Edit the `prometheus-config.yaml` file to add Linkerd scrape jobs:
-    ```yaml
-    global:
-      scrape_interval: 10s
-      scrape_timeout: 10s
-      evaluation_interval: 10s
-
-    scrape_configs:
-      - job_name: 'linkerd-control-plane'
-        scrape_interval: 10s
-        metrics_path: /metrics
-        static_configs:
-          - targets: ['linkerd-controller:9999']
-      - job_name: 'linkerd-proxy'
-        scrape_interval: 10s
-        metrics_path: /metrics
-        static_configs:
-          - targets: ['linkerd-proxy:4191']
-    ...
+2. Edit the `prometheus-config.yaml` file to add Linkerd scrape jobs.The running configuration of the builtin prometheus can be used as a reference.
     ```
-The running configuration of the builtin prometheus can be used as a reference.
-```
-kubectl -n linkerd-viz  get configmap prometheus-config -o yaml
-```
+    kubectl -n linkerd-viz  get configmap prometheus-config -o yaml > linkerd-viz.yml
+    ```
 
 3. Save and apply the configuration.
 
-### Step 2.2: Verify the Configuration
+### Step 1.1: Verify the Configuration
 
 You can check if Prometheus is scraping the Linkerd jobs by visiting `http://localhost:9090/targets`.
 
 ---
 
-## Grafana Installation
+## Grafana Configuration
 
-To visualize the metrics, you can install **Grafana** and configure it to use Prometheus as a data source.
+To visualize the metrics, you need to configure **Grafana**  to use Prometheus as a data source.
 
-### Step 3: Install Grafana
+### Step 2: Install and modify Grafana values.yaml
 
-1. Add the Grafana Helm repository:
-    ```bash
-    helm repo add grafana https://grafana.github.io/helm-charts
-    helm repo update
-    ```
-
-2. Download the **values.yaml** file from Linkerd's GitHub repository:
+1. Download the **values.yaml** file from Linkerd's GitHub repository:
     ```bash
     curl -O https://raw.githubusercontent.com/linkerd/linkerd2/main/grafana/values.yaml
     ```
 
-3. Modify the `values.yaml` file to point to your Prometheus instance:
+2. Modify the `values.yaml` file to point to your Prometheus instance:
     ```yaml
     datasources:
       datasources.yaml:
@@ -133,13 +78,6 @@ If you are using a reverse proxy (like NGINX) and accessing Grafana on a subpath
       root_url: '%(protocol)s://%(domain)s:/grafana/'
   ```
 
-4. Install Grafana using Helm:
-    ```bash
-    helm install grafana -n grafana --create-namespace grafana/grafana -f values.yaml
-    ```
-
----
-
 ## Accessing Grafana
 
 After installation, you can access Grafana locally:
@@ -157,11 +95,6 @@ After installation, you can access Grafana locally:
         ```
 
 ---
-
-### Notes
-
-- Make sure to replace namespace placeholders as needed.
-- Ensure proper access and security policies are in place when deploying to production.
 
 # References
 - [Network Monitoring with the Linkerd Service Mesh](https://buoyant.io/blog/network-monitoring-with-the-linkerd-service-mesh)

@@ -1,4 +1,4 @@
-# Linkerd and Prometheus Setup Guide
+# Linkerd Service mesh Observability
 
 This repository documents the process I took for configuring **Prometheus** and **Grafana** for monitoring **Linkerd** metrics (linkerd proxy & control plane) in a Kubernetes environment.It’s important to note that you should never use the Prometheus that Linkerd Viz installs in production: it uses volatile storage for its metrics, so every time its Pod restarts, you’ll lose all your historical data. Instead, install your own Prometheus and use that. Linkerd can be installed via Helm rather than with the linkerd install command. This is recommended for production, since it allows for repeatability. I will be using Infrastructure as Code with Terraform to automate the setup.
 

@@ -1,6 +1,6 @@
 # Linkerd and Prometheus Setup Guide
 
-This repository provides a step-by-step guide to installing and configuring **Prometheus** and **Grafana** for monitoring **Linkerd** metrics in a Kubernetes environment.It’s important to note that you should never use the Prometheus that Linkerd Viz installs in production: it uses volatile storage for its metrics, so every time its Pod restarts, you’ll lose all your historical data. Instead, install your own Prometheus and use that.
+This repository provides a step-by-step guide to installing and configuring **Prometheus** and **Grafana** for monitoring **Linkerd** metrics (linkerd proxy & control plane) in a Kubernetes environment.It’s important to note that you should never use the Prometheus that Linkerd Viz installs in production: it uses volatile storage for its metrics, so every time its Pod restarts, you’ll lose all your historical data. Instead, install your own Prometheus and use that.
 
 ## Table of Contents
 

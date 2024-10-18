@@ -1,0 +1,15 @@
+*.tfstate
+*.tfstate.backup
+
+.terraform.lock.hcl
+
+
+.terraform/
+
+
+*.crt
+*.key
+
+
+*.yaml
+

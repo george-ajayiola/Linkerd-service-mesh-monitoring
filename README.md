@@ -45,7 +45,7 @@ To visualize the metrics, you need to configure **Grafana**  to use Prometheus a
 
 ### Step 2: Install and modify Grafana values.yaml
 
-1. Download the **values.yaml** file from Linkerd's GitHub repository:
+1. Download the **values.yaml** file from Linkerd's GitHub repository, the file grafana/values.yaml provides a default Helm config for the Grafana official Helm chart, which pulls the Linkerd dashboards published at https://grafana.com/orgs/linkerd/dashboards:
     ```bash
     curl -O https://raw.githubusercontent.com/linkerd/linkerd2/main/grafana/values.yaml
     ```

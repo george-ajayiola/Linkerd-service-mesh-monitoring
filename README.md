@@ -14,8 +14,9 @@ I got the steps for generating your own mTLS root certificates from the linkerd 
 
 - [Configure Prometheus for Linkerd Metrics](#configure-prometheus-for-linkerd-metrics)
 - [Grafana Configuration](#grafana-configuration)
-- [Accessing Grafana](#accessing-grafana)
 - [Install a demo app](#install-a-demo-app)
+- [Accessing Grafana](#accessing-grafana)
+
 
 ---
 

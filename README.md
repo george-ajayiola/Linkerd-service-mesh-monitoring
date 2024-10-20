@@ -23,7 +23,7 @@ After running the ```terraform apply``` command, you should have this created in
 
 ## Configure Prometheus for Linkerd Metrics
 
-To monitor Linkerd metrics, you need to set up an external **Prometheus** instance. This will scrape the control plane and proxy metrics in a format consumable by both users and Linkerd components like the web dashboard. To scrape **Linkerd** metrics, you'll need to modify the Prometheus configuration.
+To monitor Linkerd metrics, you need to set up an external **Prometheus** instance. This will scrape the control plane and proxy metrics in a format consumable by both users and Linkerd components. To scrape **Linkerd** metrics, you'll need to modify the Prometheus configuration.
 
 ### Step 1: Modify the Prometheus ConfigMap
 

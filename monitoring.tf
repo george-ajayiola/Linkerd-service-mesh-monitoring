@@ -2,7 +2,8 @@ data "azurerm_kubernetes_cluster" "this" {
   name                = "${var.env}-${var.aks_name}"
   resource_group_name = var.resource_group_name
 
-  depends_on = [azurerm_kubernetes_cluster.this]
+  # comment this  out if you  get an error of  cluster unreachable
+  # depends_on = [azurerm_kubernetes_cluster.this]
 }
 
 provider "helm" {

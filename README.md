@@ -14,6 +14,7 @@ I got the steps for generating your own mTLS root certificates from the linkerd 
 - [Configure Prometheus for Linkerd Metrics](#configure-prometheus-for-linkerd-metrics)
 - [Grafana Configuration](#grafana-configuration)
 - [Accessing Grafana](#accessing-grafana)
+- [Install a demo app](https://github.com/george-ajayiola/Linkerd-service-mesh-observability/edit/main/README.md#install-a-demo-app)
 
 ---
 
@@ -32,7 +33,7 @@ To monitor Linkerd metrics, you need to set up an external **Prometheus** instan
     kubectl get configmap prometheus-server -o yaml > prometheus-config.yaml
     ```
 
-2. Edit the `prometheus-config.yaml` file to add Linkerd scrape jobs. I got the scrape configuration that has to be applied to the external Prometheus instance from the linkerd  [documentation](https://linkerd.io/2.12/tasks/external-prometheus/#prometheus-scrape-configuration).
+2. Edit the `prometheus-config.yaml` file to add Linkerd scrape jobs. I got the scrape configuration that has to be applied to my Prometheus instance from the linkerd  [documentation](https://linkerd.io/2.12/tasks/external-prometheus/#prometheus-scrape-configuration).
     ```
     kubectl -n linkerd-viz  get configmap prometheus-config -o yaml > linkerd-viz.yml
     ```
@@ -126,6 +127,8 @@ After installation, you can access Grafana locally:
 
    The metrics displayed in the dashboards above align with what are often referred to as Golden Signals in monitoring and observability. The Golden Signals are a set of key metrics recommended for monitoring microservices, especially in distributed systems. They help to understand the performance and health of services.
 
+# Conclusion
+  In conclusion, setting up observability for a Linkerd service mesh with Prometheus and Grafana in a Kubernetes environment provides valuable insights into both the control plane and data plane metrics. I learned that relying on the Prometheus instance installed by Linkerd Viz is not ideal for production due to its volatile storage, as you risk losing historical data with Pod restarts. Instead, using a production-ready Prometheus setup is essential for long-term reliability. Meshing applications like the Emojivoto demo app immediately unlocks key telemetry data, allowing you to track crucial performance indicators for your microservices. This observability setup ultimately enhances service health, performance, and operational efficiency, making it a critical component in managing Kubernetes-based service meshes effectively.
 # References
 - [Network Monitoring with the Linkerd Service Mesh](https://buoyant.io/blog/network-monitoring-with-the-linkerd-service-mesh)
 - [Bringing your own Prometheus](https://linkerd.io/2.12/tasks/external-prometheus/)

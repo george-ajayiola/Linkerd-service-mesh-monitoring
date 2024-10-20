@@ -1,11 +1,12 @@
 # Linkerd Service mesh Observability
 
-This repository documents the process I took for configuring **Prometheus** and **Grafana** for monitoring **Linkerd** metrics (linkerd proxy & control plane) in a Kubernetes environment. I have learned that you should never use the Prometheus that Linkerd Viz installs in production: it uses volatile storage for its metrics, so every time its Pod restarts, you’ll lose all your historical data. Instead, install your own Prometheus instace and use that. Linkerd can be installed via Helm rather than with the linkerd install command. This is recommended for production, since it allows for repeatability. I will be using Infrastructure as Code with Terraform to automate the setup.
+This repository documents the process I took for configuring **Prometheus** and **Grafana** for monitoring **Linkerd** metrics (linkerd proxy & control plane) in a Kubernetes environment. I have learned that you should never use the Prometheus that Linkerd Viz installs in production: it uses volatile storage for its metrics, so every time its Pod restarts, you’ll lose all your historical data. Instead, install your own Prometheus instance and use that. Linkerd can be installed via Helm rather than with the linkerd install command. This is recommended for production, since it allows for repeatability. I will be using Infrastructure as Code with Terraform for the setup.
 
 
 ## Prerequisite: 
-generate mTLS certificates
-To do automatic mutual TLS, Linkerd requires trust anchor certificate and an issuer certificate and key pair. When you’re using linkerd install, these are generated  for you. However, for Helm, you will need to generate these yourself.
+generate mTLS certificates.
+Mutual TLS (mTLS) is like a two-way handshake between two parties to ensure both are who they say they are and that their communication is secure. In tech terms, this means that when two services (like two apps or microservices) talk to each other, they first check each other's certificates (like digital IDs) to verify their identity. Then, they use encryption to securely communicate, so no one else can intercept or modify the messages being exchanged.
+To do automatic mutual TLS, Linkerd requires a trust anchor certificate and an issuer certificate and key pair. When you’re using linkerd install, these are generated for you. However, for Helm, you will need to generate these yourself. 
 
 I got the steps for generating your own mTLS root certificates from the linkerd [documentation](https://linkerd.io/2-edge/tasks/generate-certificates/#trust-anchor-certificate).
 

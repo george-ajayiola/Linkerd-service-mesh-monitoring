@@ -36,9 +36,6 @@ To monitor Linkerd metrics, you need to set up an external **Prometheus** instan
     ```
 
 2. Edit the `prometheus-config.yaml` file to add Linkerd scrape jobs. I got the scrape configuration that has to be applied to my Prometheus instance from the linkerd  [documentation](https://linkerd.io/2.12/tasks/external-prometheus/#prometheus-scrape-configuration).
-    ```
-    kubectl -n linkerd-viz  get configmap prometheus-config -o yaml > linkerd-viz.yml
-    ```
 
 3. Save and apply the configuration.
 
